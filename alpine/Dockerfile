@@ -1,39 +1,55 @@
-FROM alpine:3.7
+FROM alpine:latest
 
-RUN apk add --no-cache ca-certificates libstdc++ su-exec
-RUN set -eux; \
- addgroup -g 9987 ts3server; \
- adduser -u 9987 -Hh /var/ts3server -G ts3server -s /sbin/nologin -D ts3server; \
- mkdir -p /var/ts3server /var/run/ts3server; \
- chown ts3server:ts3server /var/ts3server /var/run/ts3server; \
- chmod 777 /var/ts3server /var/run/ts3server
+LABEL description "TeamSpeak is a full-featured proprietary VoIP software"
 
-ENV PATH "${PATH}:/opt/ts3server"
+# this fork is maintained by kleberbaum
+MAINTAINER Florian Kleber <kleberbaum@erebos.xyz>
 
-ARG TEAMSPEAK_CHECKSUM=f7eff1e4d81a31631a8f27ac1ea8035a036b92853bfaabd4c12d979e3ff0ed76
-ARG TEAMSPEAK_URL=http://dl.4players.de/ts/releases/3.2.0/teamspeak3-server_linux_alpine-3.2.0.tar.bz2
+# change here to desired version
+ARG TEAMSPEAK_URL "http://dl.4players.de/ts/releases/pre_releases/server/3.3.0-Beta-1/teamspeak3-server_linux_alpine-3.3.0.tar.bz2"
+ARG TEAMSPEAK_CHECKSUM "25af7f8ba48199fa075102727c763a510b69b4d098afb77b0d6da1c1c6103fd1"
 
-RUN set -eux; \
- apk add --no-cache --virtual .fetch-deps tar; \
- wget "${TEAMSPEAK_URL}" -O server.tar.bz2; \
- echo "${TEAMSPEAK_CHECKSUM} *server.tar.bz2" | sha256sum -c -; \
- mkdir -p /opt/ts3server; \
- tar -xf server.tar.bz2 --strip-components=1 -C /opt/ts3server; \
- rm server.tar.bz2; \
- apk del .fetch-deps; \
- mv /opt/ts3server/*.so /opt/ts3server/redist/* /usr/local/lib; \
- ldconfig /usr/local/lib; \
- chown -R ts3server:ts3server /opt/ts3server
+WORKDIR /opt/ts3server
 
-# setup directory where user data is stored
-VOLUME /var/ts3server/
-WORKDIR /var/ts3server/
+# update, install and cleaning
+RUN echo "## Installing base ##" && \
+    echo "@testing http://dl-cdn.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/repositories && \
+    echo "@community http://dl-cdn.alpinelinux.org/alpine/edge/community/" >> /etc/apk/repositories && \
+    apk upgrade --update-cache --available && \
+    \
+    apk add --force \
+        su-exec \
+        libstdc++ \
+        ca-certificates \
+        tini@community \
+    \
+    && addgroup -g 9987 ts3server \
+    && adduser -u 9987 -Hh /var/ts3server -G ts3server -s /sbin/nologin -D ts3server \
+    && mkdir -p /var/ts3server /var/run/ts3server \
+    && chown ts3server.ts3server /var/ts3server /var/run/ts3server \
+    && echo "## Downloading ${TS_VERSION} ##" \
+    && apk add --no-cache --virtual=build-dependencies tar \
+    && curl -o server.tar.bz2 -SL "${TEAMSPEAK_URL}" \
+    && echo "${TEAMSPEAK_CHECKSUM} *server.tar.bz2" | sha256sum -c - \
+    && tar -xf server.tar.bz2 --strip-components=1 -C /opt/ts3server \
+    && rm -rf server.tar.bz2 \
+    && mv /opt/ts3server/*.so /opt/ts3server/redist/* /usr/local/lib \
+    && rm -rf redist doc serverquerydocs tsdns CHANGELOG \
+    && ldconfig /usr/local/lib \
+    && chown -R ts3server.ts3server /opt/ts3server \
+    \
+    && apk del --purge --no-cache build-dependencies \
+    && rm -rf /tmp/* /var/cache/apk/* /var/cache/distfiles/*
 
-#  9987 default voice
-# 10011 server query
-# 30033 file transport
-EXPOSE 9987/udp 10011 30033 
+# 9987 default voice, 10011 server query, 30033 file transport
+EXPOSE "9987/udp" "10011/tcp" "30033/tcp"
 
-COPY entrypoint.sh /opt/ts3server
-ENTRYPOINT [ "entrypoint.sh" ]
-CMD [ "ts3server" ]
+# place init
+ADD run.sh /
+RUN chmod +x /run.sh
+
+# I personally like to start my containers with tini ^^
+ENTRYPOINT ["/sbin/tini", "--", "/run.sh"]
+
+# additional post-installation configurations
+CMD ["ts3server"]
