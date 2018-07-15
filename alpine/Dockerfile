@@ -6,8 +6,8 @@ LABEL description "TeamSpeak is a full-featured proprietary VoIP software"
 MAINTAINER Florian Kleber <kleberbaum@erebos.xyz>
 
 # change here to desired version
-ARG TEAMSPEAK_URL "http://dl.4players.de/ts/releases/pre_releases/server/3.3.0-Beta-1/teamspeak3-server_linux_alpine-3.3.0.tar.bz2"
-ARG TEAMSPEAK_CHECKSUM "25af7f8ba48199fa075102727c763a510b69b4d098afb77b0d6da1c1c6103fd1"
+ARG TEAMSPEAK_URL="http://dl.4players.de/ts/releases/pre_releases/server/3.3.0-Beta-1/teamspeak3-server_linux_alpine-3.3.0.tar.bz2"
+ARG TEAMSPEAK_CHECKSUM="25af7f8ba48199fa075102727c763a510b69b4d098afb77b0d6da1c1c6103fd1"
 
 WORKDIR /opt/ts3server
 
@@ -29,7 +29,7 @@ RUN echo "## Installing base ##" && \
     && chown ts3server.ts3server /var/ts3server /var/run/ts3server \
     && echo "## Downloading ${TS_VERSION} ##" \
     && apk add --no-cache --virtual=build-dependencies tar \
-    && curl -o server.tar.bz2 -SL "${TEAMSPEAK_URL}" \
+    && wget "${TEAMSPEAK_URL}" -O server.tar.bz2 \
     && echo "${TEAMSPEAK_CHECKSUM} *server.tar.bz2" | sha256sum -c - \
     && tar -xf server.tar.bz2 --strip-components=1 -C /opt/ts3server \
     && rm -rf server.tar.bz2 \
