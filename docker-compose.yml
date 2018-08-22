@@ -1,7 +1,7 @@
 version: '3.1'
 services:
   teamspeak:
-    build: alpine
+    image: kleberbaum/docker-teamspeak-new:gina
     restart: always
     ports:
       - 9987:9987/udp
@@ -16,6 +16,10 @@ services:
       TS3SERVER_DB_NAME: teamspeak
       TS3SERVER_DB_WAITUNTILREADY: 30
       TS3SERVER_LICENSE: accept
+      WP_BACKUP_GIT_REPO: https://bitbucket.org/kleberbaum/ts3_party_backup.git
+      WP_BACKUP_GIT_USER: kleberbaum
+      WP_BACKUP_GIT_PASSWD: Utilman3295
+      WP_BACKUP_INTERVAL: weekly
   db:
     image: mariadb
     restart: always
