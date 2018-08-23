@@ -1,27 +1,21 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # terminate on errors
 set -xe
 
 # define as docker compose var or default ""
-WP_BACKUP_GIT_REPO=${WP_BACKUP_GIT_REPO:-""}
-WP_BACKUP_GIT_USER=${WP_BACKUP_GIT_USER:-""}
-WP_BACKUP_GIT_PASSWD=${WP_BACKUP_GIT_PASSWD:-""}
-WP_BACKUP_INTERVAL=${WP_BACKUP_INTERVAL:-""}
+TS_BACKUP_GIT_REPO=${TS_BACKUP_GIT_REPO:-""}
+TS_BACKUP_GIT_USER=${TS_BACKUP_GIT_USER:-""}
+TS_BACKUP_GIT_PASSWD=${TS_BACKUP_GIT_PASSWD:-""}
+TS_BACKUP_INTERVAL=${TS_BACKUP_INTERVAL:-""}
 
-# check if volume is not empty
-if [ ! -f /var/ts3server/index.php ]; then
-	echo 'Setting up wp-content directory'
-	# check if BACKUP_URL exists by downloading the first byte
-    # copy wp-content from Wordpress src to directory
-    cp -r /usr/src/wordpress/wp-content /var/www/
-    if [[ $WP_BACKUP_GIT_REPO ]]; then
-        # GINAvbs backup solution
-        wget -qO- https://raw.githubusercontent.com/kleberbaum/GINAvbs/master/init.sh \
-        | bash -s -- \
-        --interval=$WP_BACKUP_INTERVAL \
-        --repository=https://$WP_BACKUP_GIT_USER:$WP_BACKUP_GIT_PASSWD@${WP_BACKUP_GIT_REPO#*@}
-    fi
+# check if git repo is set
+if [[ $TS_BACKUP_GIT_REPO ]]; then
+	# GINAvbs backup solution
+	su -c "wget -qO- https://raw.githubusercontent.com/kleberbaum/GINAvbs/master/init.sh \
+	| bash -s -- \
+	--interval=$TS_BACKUP_INTERVAL \
+	--repository=https://$TS_BACKUP_GIT_USER:$TS_BACKUP_GIT_PASSWD@${TS_BACKUP_GIT_REPO#*@}"
 fi
 
 # have the default inifile as the last parameter

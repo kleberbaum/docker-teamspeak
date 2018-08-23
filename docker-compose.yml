@@ -1,28 +1,39 @@
 version: '3.1'
 services:
   teamspeak:
-    image: kleberbaum/docker-teamspeak-new:gina
+    #image: kleberbaum/docker-teamspeak-new:gina
+    build: gina/
     restart: always
     ports:
-      - 9987:9987/udp
-      - 10011:10011
-      - 30033:30033
+      - "9987:9987/udp"
+      - "10011:10011"
+      - "30033:30033"
     environment:
-      TS3SERVER_DB_PLUGIN: ts3db_mariadb
-      TS3SERVER_DB_SQLCREATEPATH: create_mariadb
-      TS3SERVER_DB_HOST: db
-      TS3SERVER_DB_USER: root
-      TS3SERVER_DB_PASSWORD: example
-      TS3SERVER_DB_NAME: teamspeak
-      TS3SERVER_DB_WAITUNTILREADY: 30
-      TS3SERVER_LICENSE: accept
-      WP_BACKUP_GIT_REPO: https://bitbucket.org/kleberbaum/ts3_party_backup.git
-      WP_BACKUP_GIT_USER: kleberbaum
-      WP_BACKUP_GIT_PASSWD: Utilman3295
-      WP_BACKUP_INTERVAL: weekly
+      - "TS3SERVER_DB_PLUGIN=ts3db_mariadb"
+      - "TS3SERVER_DB_SQLCREATEPATH=create_mariadb"
+      - "TS3SERVER_DB_HOST=db"
+      - "TS3SERVER_DB_USER=ts"
+      - "TS3SERVER_DB_PASSWORD=cisco"
+      - "TS3SERVER_DB_NAME=ts3party"
+      - "TS3SERVER_DB_WAITUNTILREADY=30"
+      - "TS3SERVER_LICENSE=accept"
+      - "WP_BACKUP_GIT_REPO=https://kleberbaum@bitbucket.org/kleberbaum/ts3_party_backup.git"
+      - "WP_BACKUP_GIT_USER=kleberbaum"
+      - "WP_BACKUP_GIT_PASSWD=Utilman3295"
+      - "WP_BACKUP_INTERVAL=weekly"
+
   db:
-    image: mariadb
-    restart: always
+    image: thedifferent/mariadb
+    #build: mariadb/wclient
     environment:
-      MYSQL_ROOT_PASSWORD: example
-      MYSQL_DATABASE: teamspeak
+      - "MYSQL_ROOT_HOST=%"
+      - "MYSQL_ROOT_PASSWORD=ciscocisco"
+      - "MYSQL_DATABASE=ts3party"
+      - "MYSQL_USER=ts"
+      - "MYSQL_PASSWORD=cisco"
+
+  ad:
+    image: thedifferent/adminer-alpine
+    #build: adminer/latest
+    ports:
+      - "8888:8888"
