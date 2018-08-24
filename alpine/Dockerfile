@@ -58,4 +58,4 @@ ENTRYPOINT ["/sbin/tini", "--", "./entrypoint.sh"]
 USER ts3server
 
 # additional post-installation configurations
-CMD ["./ts3server", "license_accepted=1"]
+CMD ["./ts3server", "inifile=/var/run/ts3server/ts3server.ini"]

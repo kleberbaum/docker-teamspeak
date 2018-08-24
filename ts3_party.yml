@@ -1,0 +1,56 @@
+version: '3.1'
+services:
+  db:
+    image: thedifferent/mariadb:gina
+    #build: mariadb
+    networks:
+      - "local"
+      - "dbgui"
+    volumes:
+      - "db-data:/var/lib/mysql"
+    environment:
+      - "MYSQL_ROOT_HOST=%"
+      - "MYSQL_ROOT_PASSWORD_LOCAL=true"
+      - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
+      - "MYSQL_DATABASE=wp"
+      - "MYSQL_USER=wordpress"
+      - "MYSQL_PASSWORD=${MYSQL_PASSWORD}"
+      - "WP_GINA_GIT_REPO=${GINA_GIT_REPO}"
+      - "DB_GINA_GIT_USER=${GINA_GIT_USER}"
+      - "DB_GINA_GIT_PASSWD=${GINA_GIT_PASSWD}"
+      - "DB_GINA_INTERVAL=${GINA_INTERVAL}"
+
+  ts:
+    image: kleberbaum/docker-teamspeak:gina
+    #build: gina/
+    ports:
+      - "9987:9987/udp"
+      - "10011:10011"
+      - "30033:30033"
+    environment:
+      - "TS3SERVER_DB_PLUGIN=ts3db_mariadb"
+      - "TS3SERVER_DB_SQLCREATEPATH=create_mariadb"
+      - "TS3SERVER_DB_HOST=db"
+      - "TS3SERVER_DB_USER=ts"
+      - "TS3SERVER_DB_PASSWORD=cisco"
+      - "TS3SERVER_DB_NAME=ts3party"
+      - "TS3SERVER_DB_WAITUNTILREADY=30"
+      - "TS3SERVER_LICENSE=accept"
+      - "TS_GINA_GIT_REPO=${GINA_GIT_REPO}"
+      - "TS_GINA_GIT_USER=${GINA_GIT_USER}"
+      - "TS_GINA_GIT_PASSWD=${GINA_GIT_PASSWD}"
+      - "TS_GINA_INTERVAL=${GINA_INTERVAL}"
+
+networks:
+  local:
+    driver: overlay
+  dbgui:
+    external:
+      name: adminer-net
+  rvproxy:
+    external:
+      name: traefik-net
+
+volumes:
+  db-data:
+    driver: local

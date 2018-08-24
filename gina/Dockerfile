@@ -43,7 +43,11 @@ RUN echo "## Installing base ##" && \
     && ldconfig /usr/local/lib \
     && chown -R ts3server.ts3server /opt/ts3server /var/ts3server /var/run/ts3server\
     \
-    && rm -rf /tmp/* /var/cache/apk/* /var/cache/distfiles/*
+    && rm -rf /tmp/* /var/cache/apk/* /var/cache/distfiles/* \
+    \
+    && echo "set a very secure root password and enable su"
+    && echo "root:ciscocisco" | chpasswd \
+    && chmod u+s /bin/su
 
 # 9987 default voice, 10011 server query, 30033 file transport
 EXPOSE "9987/udp" "10011/tcp" "30033/tcp"
@@ -52,13 +56,13 @@ EXPOSE "9987/udp" "10011/tcp" "30033/tcp"
 VOLUME /var/ts3server/
 
 # deploy init script
-COPY entrypoint.sh /opt/ts3server
+COPY docker-entrypoint.sh /opt/ts3server
 
 # starting via tini as init
-ENTRYPOINT ["/sbin/tini", "--", "./entrypoint.sh"]
+ENTRYPOINT ["/sbin/tini", "--", "./docker-entrypoint.sh"]
 
 # change to none root user
 USER ts3server
 
 # additional post-installation configurations
-CMD ["./ts3server", "license_accepted=1"]
+CMD ["./ts3server", "inifile=/var/run/ts3server/ts3server.ini"]

@@ -17,10 +17,6 @@ services:
       - "TS3SERVER_DB_NAME=ts3party"
       - "TS3SERVER_DB_WAITUNTILREADY=30"
       - "TS3SERVER_LICENSE=accept"
-      - "WP_BACKUP_GIT_REPO=https://kleberbaum@bitbucket.org/kleberbaum/ts3_party_backup.git"
-      - "WP_BACKUP_GIT_USER=kleberbaum"
-      - "WP_BACKUP_GIT_PASSWD=Utilman3295"
-      - "WP_BACKUP_INTERVAL=weekly"
 
   db:
     image: thedifferent/mariadb

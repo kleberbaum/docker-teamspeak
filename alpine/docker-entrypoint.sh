@@ -3,11 +3,6 @@
 # terminate on errors
 set -xe
 
-# have the default inifile as the last parameter
-if [ "$1" = './ts3server' ]; then
-    set -- "$@" inifile=/var/run/ts3server/ts3server.ini
-fi
-
 # usage: file_env VAR [DEFAULT]
 #    ie: file_env 'XYZ_DB_PASSWORD' 'example'
 # (will allow for "$XYZ_DB_PASSWORD_FILE" to fill in the value of

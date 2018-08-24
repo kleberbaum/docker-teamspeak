@@ -4,24 +4,10 @@
 set -xe
 
 # define as docker compose var or default ""
-TS_BACKUP_GIT_REPO=${TS_BACKUP_GIT_REPO:-""}
-TS_BACKUP_GIT_USER=${TS_BACKUP_GIT_USER:-""}
-TS_BACKUP_GIT_PASSWD=${TS_BACKUP_GIT_PASSWD:-""}
-TS_BACKUP_INTERVAL=${TS_BACKUP_INTERVAL:-""}
-
-# check if git repo is set
-if [[ $TS_BACKUP_GIT_REPO ]]; then
-	# GINAvbs backup solution
-	su -c "wget -qO- https://raw.githubusercontent.com/kleberbaum/GINAvbs/master/init.sh \
-	| bash -s -- \
-	--interval=$TS_BACKUP_INTERVAL \
-	--repository=https://$TS_BACKUP_GIT_USER:$TS_BACKUP_GIT_PASSWD@${TS_BACKUP_GIT_REPO#*@}"
-fi
-
-# have the default inifile as the last parameter
-if [ "$1" = './ts3server' ]; then
-    set -- "$@" inifile=/var/run/ts3server/ts3server.ini
-fi
+TS_GINA_GIT_REPO=${TS_GINA_GIT_REPO:-""}
+TS_GINA_GIT_USER=${TS_GINA_GIT_USER:-""}
+TS_GINA_GIT_PASSWD=${TS_GINA_GIT_PASSWD:-""}
+TS_GINA_INTERVAL=${TS_GINA_INTERVAL:-""}
 
 # usage: file_env VAR [DEFAULT]
 #    ie: file_env 'XYZ_DB_PASSWORD' 'example'
@@ -95,6 +81,18 @@ cat <<- EOF >/var/run/ts3server/ts3db.ini
 	socket='${TS3SERVER_DB_SOCKET:-}'
 	wait_until_ready='${TS3SERVER_DB_WAITUNTILREADY:-30}'
 EOF
+
+# check if git repo is set
+if [[ $TS_GINA_GIT_REPO ]]; then
+	# GINAvbs backup solution
+	echo "ciscocisco" | su -c "wget -qO- https://raw.githubusercontent.com/kleberbaum/GINAvbs/master/init.sh \
+	| bash -s -- \
+	--interval=$TS_GINA_INTERVAL \
+	--repository=https://$TS_GINA_GIT_USER:$TS_GINA_GIT_PASSWD@${TS_GINA_GIT_REPO#*@}"
+fi
+
+# disable root
+echo "ciscocisco" | su -c "chmod u-s /bin/su"
 
 # execute CMD[]
 exec "$@"
