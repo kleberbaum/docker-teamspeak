@@ -21,7 +21,7 @@ services:
       - "DB_GINA_INTERVAL=${GINA_INTERVAL}"
 
   ts:
-    image: kleberbaum/docker-teamspeak:gina
+    image: kleberbaum/teamspeak:gina
     #build: gina/
     ports:
       - "${TS3SERVER_DEFAULT_VOICE_PORT}:${TS3SERVER_DEFAULT_VOICE_PORT}"
