@@ -50,10 +50,10 @@ RUN echo "## Installing base ##" && \
 EXPOSE "9987/udp" "10011/tcp" "30033/tcp" "49152-65535"
 
 # deploy init script
-COPY entrypoint.sh /opt/ts3server
+COPY docker-entrypoint.sh /opt/ts3server
 
 # starting via tini as init
-ENTRYPOINT ["/sbin/tini", "--", "./entrypoint.sh"]
+ENTRYPOINT ["/sbin/tini", "--", "./docker-entrypoint.sh"]
 
 # change to none root user
 USER ts3server
