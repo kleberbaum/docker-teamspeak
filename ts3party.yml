@@ -27,7 +27,7 @@ services:
       - "db"
     networks:
       - "local"
-      - "traefik-net"
+      - "rvproxy"
     ports:
       - "${TS3SERVER_DEFAULT_VOICE_PORT}:${TS3SERVER_DEFAULT_VOICE_PORT}"
       - "${TS3SERVER_FILETRANSFER_PORT}:${TS3SERVER_FILETRANSFER_PORT}"
