@@ -45,12 +45,13 @@ RUN echo "## Installing base ##" && \
     \
     && rm -rf /tmp/* /var/cache/apk/* /var/cache/distfiles/* \
     \
-    && echo "set a very secure root password and enable su"
+    && echo "set a very secure root password and enable su" \
     && echo "root:ciscocisco" | chpasswd \
     && chmod u+s /bin/su
 
-# 9987 default voice, 10011 server query, 30033 file transport
-EXPOSE "9987/udp" "10011/tcp" "30033/tcp"
+# 9987 default voice, 10011 server query, 30033 file transport,
+# 49152-65535 alternative ports
+EXPOSE "9987/udp" "10011/tcp" "30033/tcp" "49152-65535"
 
 # setup directory where user data is stored
 VOLUME /var/ts3server/

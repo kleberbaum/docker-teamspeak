@@ -12,8 +12,8 @@ services:
       - "MYSQL_ROOT_HOST=%"
       - "MYSQL_ROOT_PASSWORD_LOCAL=true"
       - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
-      - "MYSQL_DATABASE=wp"
-      - "MYSQL_USER=wordpress"
+      - "MYSQL_DATABASE=ts3party"
+      - "MYSQL_USER=ts"
       - "MYSQL_PASSWORD=${MYSQL_PASSWORD}"
       - "WP_GINA_GIT_REPO=${GINA_GIT_REPO}"
       - "DB_GINA_GIT_USER=${GINA_GIT_USER}"
@@ -24,16 +24,16 @@ services:
     image: kleberbaum/docker-teamspeak:gina
     #build: gina/
     ports:
-      - "9987:9987/udp"
-      - "10011:10011"
-      - "30033:30033"
+      - "${TS3SERVER_DEFAULT_VOICE_PORT}:${TS3SERVER_DEFAULT_VOICE_PORT}"
+      - "${TS3SERVER_FILETRANSFER_PORT}:${TS3SERVER_FILETRANSFER_PORT}"
+      - "${TS3SERVER_QUERY_PORT}:${TS3SERVER_QUERY_PORT}"
     environment:
       - "TS3SERVER_DB_PLUGIN=ts3db_mariadb"
       - "TS3SERVER_DB_SQLCREATEPATH=create_mariadb"
       - "TS3SERVER_DB_HOST=db"
-      - "TS3SERVER_DB_USER=ts"
-      - "TS3SERVER_DB_PASSWORD=cisco"
       - "TS3SERVER_DB_NAME=ts3party"
+      - "TS3SERVER_DB_USER=ts"
+      - "TS3SERVER_DB_PASSWORD=${MYSQL_PASSWORD}"
       - "TS3SERVER_DB_WAITUNTILREADY=30"
       - "TS3SERVER_LICENSE=accept"
       - "TS_GINA_GIT_REPO=${GINA_GIT_REPO}"

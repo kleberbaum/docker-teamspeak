@@ -45,8 +45,9 @@ RUN echo "## Installing base ##" && \
     && rm -rf /tmp/* /var/cache/apk/* /var/cache/distfiles/*
 
 
-# 9987 default voice, 10011 server query, 30033 file transport
-EXPOSE "9987/udp" "10011/tcp" "30033/tcp"
+# 9987 default voice, 10011 server query, 30033 file transport,
+# 49152-65535 alternative ports
+EXPOSE "9987/udp" "10011/tcp" "30033/tcp" "49152-65535"
 
 # deploy init script
 COPY entrypoint.sh /opt/ts3server
