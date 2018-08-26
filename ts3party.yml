@@ -23,6 +23,11 @@ services:
   ts:
     image: kleberbaum/teamspeak:gina
     #build: gina/
+    depends_on:
+      - "db"
+    networks:
+      - "local"
+      - "dbgui"
     ports:
       - "${TS3SERVER_DEFAULT_VOICE_PORT}:${TS3SERVER_DEFAULT_VOICE_PORT}"
       - "${TS3SERVER_FILETRANSFER_PORT}:${TS3SERVER_FILETRANSFER_PORT}"
