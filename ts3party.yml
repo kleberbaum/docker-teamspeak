@@ -42,6 +42,7 @@ services:
       - "${TS3SERVER_FILETRANSFER_PORT}:${TS3SERVER_FILETRANSFER_PORT}/tcp"
       - "${TS3SERVER_QUERY_PORT}:${TS3SERVER_QUERY_PORT}/tcp"
     environment:
+      - "TS3SERVER_MACHINE_ID=1"
       - "TS3SERVER_DB_PLUGIN=ts3db_mariadb"
       - "TS3SERVER_DB_SQLCREATEPATH=create_mariadb"
       - "TS3SERVER_DB_HOST=${MYSQL_HOST}"
