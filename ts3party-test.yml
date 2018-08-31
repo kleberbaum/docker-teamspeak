@@ -1,0 +1,68 @@
+version: '3.1'
+
+services:
+  db:
+    image: thedifferent/mariadb:gina
+    #build: mariadb
+    networks:
+      - "local"
+      - "dbgui"
+    volumes:
+      - "db-data:/var/lib/mysql"
+    environment:
+      - "MYSQL_ROOT_HOST=%"
+      - "MYSQL_ROOT_PASSWORD_LOCAL=true"
+      - "MYSQL_ROOT_PASSWORD=ciscocisco"
+      - "MYSQL_DATABASE=ts3"
+      - "MYSQL_USER=ts"
+      - "MYSQL_PASSWORD=ciscocisco"
+    deploy:
+      resources:
+        #limits:
+        #  cpus: '0.20'
+        #  memory: 512M
+        reservations:
+          cpus: '0.10'
+          memory: 256M
+
+  ts:
+    image: kleberbaum/teamspeak:gina
+    #build: gina/
+    depends_on:
+      - "db"
+    links:
+      - "db"
+    networks:
+      - "local"
+      - "rvproxy"
+    ports:
+      - "9987:9987/udp"
+      - "10011:10011"
+      - "30033:30033"
+    environment:
+      - "TS3SERVER_DB_PLUGIN=ts3db_mariadb"
+      - "TS3SERVER_DB_SQLCREATEPATH=create_mariadb"
+      - "TS3SERVER_DB_HOST=db"
+      - "TS3SERVER_DB_NAME=ts3"
+      - "TS3SERVER_DB_USER=ts"
+      - "TS3SERVER_DB_PASSWORD=ciscocisco"
+      - "TS3SERVER_DEFAULT_VOICE_PORT=9987"
+      - "TS3SERVER_FILETRANSFER_PORT=10011"
+      - "TS3SERVER_QUERY_PORT=30033"
+      - "TS3SERVER_DB_WAITUNTILREADY=30"
+      - "TS3SERVER_LICENSE=accept"
+
+
+networks:
+  local:
+    driver: overlay
+  dbgui:
+    external:
+      name: adminer-net
+  rvproxy:
+    external:
+      name: traefik-net
+
+volumes:
+  db-data:
+    driver: local
