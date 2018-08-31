@@ -51,7 +51,7 @@ RUN echo "## Installing base ##" && \
 
 # 9987 default voice, 10011 server query, 30033 file transport,
 # 49152-65535 alternative ports
-EXPOSE "9987/udp" "10011/tcp" "30033/tcp" "49152-65535"
+EXPOSE "9987/udp" "10011/tcp" "30033/tcp" "50000-55000/tcp" "55000-60000/udp"
 
 # setup directory where user data is stored
 VOLUME /var/ts3server/

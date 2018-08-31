@@ -11,7 +11,7 @@ services:
       - "db-data:/var/lib/mysql"
     environment:
       - "MYSQL_ROOT_HOST=%"
-      - "MYSQL_ROOT_PASSWORD_LOCAL=true"
+      - "MYSQL_ROOT_PASSWORD_LOCAL=false"
       - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
       - "MYSQL_DATABASE=${MYSQL_DATABASE}"
       - "MYSQL_USER=${MYSQL_USER}"
