@@ -40,7 +40,7 @@ RUN echo "## Installing base ##" && \
     && mv /opt/ts3server/*.so /opt/ts3server/redist/* /usr/local/lib \
     && rm -rf redist doc serverquerydocs tsdns CHANGELOG \
     && ldconfig /usr/local/lib \
-    && chown -R ts3server.ts3server /opt/ts3server /var/ts3server /var/run/ts3server\
+    && chown -R ts3server.ts3server /opt/ts3server /var/ts3server /var/run/ts3server \
     \
     && rm -rf /tmp/* /var/cache/apk/* /var/cache/distfiles/*
 
