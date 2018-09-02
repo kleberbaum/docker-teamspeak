@@ -48,8 +48,8 @@ cat <<- EOF >/var/run/ts3server/ts3server.ini
 	query_buffer_mb=${TS3SERVER_QUERY_BUFFER_MB:-20}
 	query_timeout=${TS3SERVER_QUERY_TIMEOUT:-300}
 	query_ssh_rsa_host_key=${TS3SERVER_QUERY_SSH_RSA_HOST_KEY:-ssh_host_rsa_key}
-	query_ip_whitelist=${TS3SERVER_IP_WHITELIST:-query_ip_whitelist.txt}
-	query_ip_blacklist=${TS3SERVER_IP_BLACKLIST:-query_ip_blacklist.txt}
+	query_ip_whitelist=${TS3SERVER_IP_WHITELIST:-/var/run/ts3server/query_ip_whitelist.txt}
+	query_ip_blacklist=${TS3SERVER_IP_BLACKLIST:-/var/run/ts3server/query_ip_blacklist.txt}
 	query_skipbruteforcecheck=${TS3SERVER_QUERY_SKIPBRUTEFORCECHECK:-0}
 	serverquerydocs_path=${TS3SERVER_SERVERQUERYDOCS_PATH:-/opt/ts3server/serverquerydocs/}
 	clear_database=${TS3SERVER_CLEAR_DATABASE:-0}

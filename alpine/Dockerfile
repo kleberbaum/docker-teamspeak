@@ -47,13 +47,17 @@ RUN echo "## Installing base ##" && \
 
 # 9987 default voice, 10011 server query, 30033 file transport,
 # 49152-65535 alternative ports
-EXPOSE "9987/udp" "10011/tcp" "30033/tcp" "49152-65535"
+EXPOSE "9987/udp" "10011/tcp" "30033/tcp"
+
+# setup directory where user data is stored
+VOLUME /opt/ts3server/ /var/ts3server/ /var/run/ts3server/
+VOLUME /teamspeak/config /teamspeak/files /teamspeak/logs /teamspeak/data
 
 # deploy init script
-COPY docker-entrypoint.sh /opt/ts3server
+COPY docker-entrypoint.sh /
 
 # starting via tini as init
-ENTRYPOINT ["/sbin/tini", "--", "./docker-entrypoint.sh"]
+ENTRYPOINT ["/sbin/tini", "--", "/docker-entrypoint.sh"]
 
 # change to none root user
 USER ts3server
