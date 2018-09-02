@@ -50,8 +50,7 @@ RUN echo "## Installing base ##" && \
 EXPOSE "9987/udp" "10011/tcp" "30033/tcp"
 
 # setup directory where user data is stored
-VOLUME /opt/ts3server/ /var/ts3server/ /var/run/ts3server/
-VOLUME /teamspeak/config /teamspeak/files /teamspeak/logs /teamspeak/data
+VOLUME /opt/ts3server/ /var/ts3server/
 
 # deploy init script
 COPY docker-entrypoint.sh /
