@@ -41,6 +41,10 @@ services:
       - "${TS3SERVER_DEFAULT_VOICE_PORT}:${TS3SERVER_DEFAULT_VOICE_PORT}/udp"
       - "${TS3SERVER_FILETRANSFER_PORT}:${TS3SERVER_FILETRANSFER_PORT}/tcp"
       - "${TS3SERVER_QUERY_PORT}:${TS3SERVER_QUERY_PORT}/tcp"
+    volumes:
+      - "ts-data:/opt/ts3server"
+      - "db-logs:/var/ts3server"
+      - "db-config:/var/run/ts3server"
     environment:
       - "TS3SERVER_MACHINE_ID=1"
       - "TS3SERVER_DB_PLUGIN=ts3db_mariadb"

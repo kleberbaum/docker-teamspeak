@@ -6,8 +6,8 @@ LABEL description "TeamSpeak is a full-featured proprietary VoIP software"
 MAINTAINER Florian Kleber <kleberbaum@erebos.xyz>
 
 # change here to desired version
-ARG TEAMSPEAK_URL="http://dl.4players.de/ts/releases/3.3.1/teamspeak3-server_linux_alpine-3.3.1.tar.bz2"
-ARG TEAMSPEAK_CHECKSUM="a1b8c896f1b132d7196d4988a331b3fb1ecd05495e4dce6706cedbbe571acd56"
+ARG TEAMSPEAK_CHECKSUM=e356d0013d7e894fd1ed91725f09525e39f077901f84b50ecad0f1e5ab4ad527
+ARG TEAMSPEAK_URL=http://dl.4players.de/ts/releases/3.4.0/teamspeak3-server_linux_alpine-3.4.0.tar.bz2
 
 WORKDIR /opt/ts3server
 
@@ -51,10 +51,13 @@ RUN echo "## Installing base ##" && \
 
 # 9987 default voice, 10011 server query, 30033 file transport,
 # 49152-65535 alternative ports
-EXPOSE "9987/udp" "10011/tcp" "30033/tcp" "50000-55000/tcp" "55000-60000/udp"
+EXPOSE "9987/udp" "10011/tcp" "30033/tcp"
 
 # setup directory where user data is stored
-VOLUME /var/ts3server/
+# /opt/ts3server/ files
+# /var/ts3server/ logs
+# /var/run/ts3server/ config
+VOLUME /opt/ts3server/ /var/ts3server/ /var/run/ts3server/
 
 # deploy init script
 COPY docker-entrypoint.sh /opt/ts3server
