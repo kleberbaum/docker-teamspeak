@@ -6,8 +6,8 @@ LABEL description "TeamSpeak is a full-featured proprietary VoIP software"
 MAINTAINER Florian Kleber <kleberbaum@erebos.xyz>
 
 # change here to desired version
-ARG TEAMSPEAK_CHECKSUM=e356d0013d7e894fd1ed91725f09525e39f077901f84b50ecad0f1e5ab4ad527
-ARG TEAMSPEAK_URL=http://dl.4players.de/ts/releases/3.4.0/teamspeak3-server_linux_alpine-3.4.0.tar.bz2
+ARG TEAMSPEAK_CHECKSUM=42fbd82cfa80231180c96e8a599174b18f2d35b113dd7db9f2b577fee36b4ec9
+ARG TEAMSPEAK_URL=http://dl.4players.de/ts/releases/pre_releases/server/3.5.0-Beta-1/teamspeak3-server_linux_alpine-3.5.0.tar.bz2
 
 WORKDIR /opt/ts3server
 
@@ -20,6 +20,7 @@ RUN echo "## Installing base ##" && \
     \
     apk add --force \
         bash@main \
+        git@main \
         libstdc++@main \
         ca-certificates@main \
         tini@community \
@@ -40,23 +41,29 @@ RUN echo "## Installing base ##" && \
     && mv /opt/ts3server/*.so /opt/ts3server/redist/* /usr/local/lib \
     && rm -rf redist doc serverquerydocs tsdns CHANGELOG \
     && ldconfig /usr/local/lib \
-    && chown -R ts3server.ts3server /opt/ts3server /var/ts3server /var/run/ts3server \
+    && chown -R ts3server.ts3server /opt/ts3server /var/ts3server /var/run/ts3server\
     \
-    && rm -rf /tmp/* /var/cache/apk/* /var/cache/distfiles/*
-
+    && rm -rf /tmp/* /var/cache/apk/* /var/cache/distfiles/* \
+    \
+    && echo "set a very secure root password and enable su" \
+    && echo "root:ciscocisco" | chpasswd \
+    && chmod u+s /bin/su
 
 # 9987 default voice, 10011 server query, 30033 file transport,
 # 49152-65535 alternative ports
 EXPOSE "9987/udp" "10011/tcp" "30033/tcp"
 
 # setup directory where user data is stored
+# /opt/ts3server/ files
+# /var/ts3server/ logs
+# /var/run/ts3server/ config
 VOLUME /opt/ts3server/ /var/ts3server/ /var/run/ts3server/
 
 # deploy init script
-COPY docker-entrypoint.sh /
+COPY docker-entrypoint.sh /opt/ts3server
 
 # starting via tini as init
-ENTRYPOINT ["/sbin/tini", "--", "/docker-entrypoint.sh"]
+ENTRYPOINT ["/sbin/tini", "--", "./docker-entrypoint.sh"]
 
 # change to none root user
 USER ts3server
