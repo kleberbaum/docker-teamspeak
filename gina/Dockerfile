@@ -6,8 +6,8 @@ LABEL description "TeamSpeak is a full-featured proprietary VoIP software"
 MAINTAINER Florian Kleber <kleberbaum@erebos.xyz>
 
 # change here to desired version
-ARG TEAMSPEAK_CHECKSUM=e356d0013d7e894fd1ed91725f09525e39f077901f84b50ecad0f1e5ab4ad527
-ARG TEAMSPEAK_URL=http://dl.4players.de/ts/releases/3.4.0/teamspeak3-server_linux_alpine-3.4.0.tar.bz2
+ARG TEAMSPEAK_CHECKSUM=cb612c26ee18fa0027119056f656ce449caf799f02c0f1864a14b68ea25ed239
+ARG TEAMSPEAK_URL=https://files.teamspeak-services.com/releases/server/3.9.1/teamspeak3-server_linux_alpine-3.9.1.tar.bz2
 
 WORKDIR /opt/ts3server
 
