@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:3.10
 
 LABEL description "TeamSpeak is a full-featured proprietary VoIP software"
 
@@ -13,9 +13,8 @@ WORKDIR /opt/ts3server
 
 # update, install and cleaning
 RUN echo "## Installing base ##" && \
-    echo "@main http://dl-cdn.alpinelinux.org/alpine/edge/main/" >> /etc/apk/main && \
-    echo "@testing http://dl-cdn.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/repositories && \
-    echo "@community http://dl-cdn.alpinelinux.org/alpine/edge/community/" >> /etc/apk/repositories && \
+    echo "@main http://dl-cdn.alpinelinux.org/alpine/v3.10/main/" >> /etc/apk/main && \
+    echo "@community http://dl-cdn.alpinelinux.org/alpine/v3.10/community/" >> /etc/apk/repositories && \
     apk upgrade --update-cache --available && \
     \
     apk add --force \
